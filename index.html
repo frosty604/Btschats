@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat To BTS Army</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b090a;
+            background-image: radial-gradient(circle at 50% 30%, #1a0b2e 0%, #0b090a 70%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glowing Heart Animations */
+        .heart {
+            position: absolute;
+            font-size: 26px;
+            animation: floatUp 6s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 12px #ff69b4, 0 0 22px #ff1493, 0 0 32px rgba(255, 105, 180, 0.8);
+            opacity: 0.9;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.7); opacity: 0; }
+            30% { opacity: 0.9; }
+            70% { opacity: 0.9; }
+            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+        }
+
+        .container {
+            background: rgba(18, 15, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 22px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(138, 43, 226, 0.2);
+            width: 90%;
+            max-width: 360px;
+            height: auto;
+            max-height: 520px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        .screen {
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            text-align: center;
+            overflow-y: auto;
+            justify-content: center;
+        }
+
+        .bts-logo {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #d1c4e9;
+            margin-bottom: 2px;
+            text-shadow: 0 0 10px rgba(186, 104, 200, 0.5);
+        }
+
+        h2 {
+            margin-bottom: 6px;
+            color: #ff80bf;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            margin-bottom: 18px;
+            font-size: 12px;
+            color: #b0bec5;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus, select:focus {
+            border-color: #ff69b4;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+        }
+        input::placeholder {
+            color: #78909c;
+        }
+        select option {
+            background: #1a0b2e;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ba68c8, #ab47bc);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(171, 71, 188, 0.4);
+        }
+        button:hover {
+            background: linear-gradient(135deg, #ab47bc, #8e24aa);
+            transform: translateY(-2px);
+        }
+
+        .get-code-btn {
+            background: transparent;
+            border: none;
+            color: #ff80bf;
+            font-size: 13px;
+            margin-top: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+            box-shadow: none;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .get-code-btn:hover {
+            color: #ff4da6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        
+        .qr-card {
+            background: linear-gradient(135deg, #ffffff, #f3e5f5);
+            padding: 8px;
+            border-radius: 12px;
+            width: 100%;
+            margin: 6px 0;
+            color: #000;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.2);
+            border: 1px solid #ffb6c1;
+        }
+        .qr-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin: 2px auto;
+            display: block;
+            border-radius: 6px;
+        }
+        .qr-card .upi-text {
+            font-size: 11px;
+            font-weight: bold;
+            color: #4a148c;
+            margin-top: 2px;
+        }
+
+        .file-upload-label {
+            display: block;
+            margin-top: 6px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed #ff80bf;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #ffb6c1;
+            text-align: left;
+        }
+        input[type="file"] {
+            display: none;
+        }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 230px;
+            overflow-y: auto;
+            margin: 8px 0;
+            padding-right: 4px;
+        }
+        .member-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 12px;
+            padding: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .member-card:hover, .member-card.selected {
+            background: rgba(186, 104, 200, 0.2);
+            border-color: #ff80bf;
+            transform: scale(1.02);
+        }
+        .member-card img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 2px;
+            border: 2px solid #ff80bf;
+        }
+        .member-card span {
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(25, 15, 35, 0.95);
+            border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+            border-radius: 20px 20px 0 0;
+        }
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+        }
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff80bf;
+            margin-right: 10px;
+        }
+        .chat-header .info {
+            text-align: left;
+        }
+        .chat-header .info h4 {
+            font-size: 14px;
+            color: #ff80bf;
+        }
+        .chat-header .info span {
+            font-size: 10px;
+            color: #4CAF50;
+        }
+        
+        .call-btn {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            border: none;
+            color: white;
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+            transition: 0.3s;
+        }
+        .call-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+            height: 340px;
+        }
+        .message {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+        }
+        .message.sent {
+            background: linear-gradient(135deg, #ba68c8, #ab47bc);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .question-tray {
+            padding: 8px 10px;
+            background: rgba(18, 15, 25, 0.95);
+            border-top: 1px solid rgba(255, 105, 180, 0.2);
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .question-tray::-webkit-scrollbar {
+            height: 4px;
+        }
+        .question-tray::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.3);
+            border-radius: 4px;
+        }
+        .q-chip {
+            background: rgba(255, 105, 180, 0.15);
+            border: 1px solid #ff80bf;
+            color: #ffb6c1;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .q-chip:hover {
+            background: #ff80bf;
+            color: #fff;
+        }
+
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            background: rgba(25, 15, 35, 0.95);
+            border-radius: 0 0 20px 20px;
+            gap: 8px;
+            align-items: center;
+        }
+        .chat-footer span {
+            font-size: 12px;
+            color: #ffb6c1;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: #1a0b2e;
+            padding: 25px 20px;
+            border-radius: 20px;
+            border: 1px solid #ff80bf;
+            text-align: center;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
+        }
+        .code-display-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ff80bf;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px dashed #ff80bf;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Glowing Floating Hearts -->
+    <div class="heart" style="left: 10%; animation-delay: 0s;">💜</div>
+    <div class="heart" style="left: 30%; animation-delay: 2s;">💖</div>
+    <div class="heart" style="left: 50%; animation-delay: 4s;">💜</div>
+    <div class="heart" style="left: 70%; animation-delay: 1s;">💗</div>
+    <div class="heart" style="left: 85%; animation-delay: 3s;">💜</div>
+
+    <div class="container">
+        <!-- Step 1: Login Screen -->
+        <div id="step1" class="screen">
+            <div class="bts-logo">BTS</div>
+            <h2>Chat To BTS Army</h2>
+            <p class="subtitle">Enter your exclusive Redeem Code to connect 💜</p>
+            
+            <input type="text" id="redeemCode" placeholder="Enter Redeem Code">
+            <button onclick="checkCode()">Enter Chat</button>
+            <button class="get-code-btn" onclick="goToGetCode()">Get Code</button>
+        </div>
+
+        <!-- Step 2: Get Code & Payment -->
+        <div id="step2" class="screen hidden" style="justify-content: flex-start; padding: 16px 20px;">
+            <div class="bts-logo">BTS</div>
+            <h2>Scan & Pay 💜</h2>
+            <p class="subtitle" style="margin-bottom: 6px;">₹7 ka payment karein aur screenshot upload karein!</p>
+            
+            <div class="qr-card">
+                <span style="font-size: 11px; color: #8e24aa; font-weight: bold;">💜 SCAN & PAY 💜</span>
+                <img id="qrImg" alt="QR Code">
+                <div class="upi-text">Name: BTS Fans<br>UPI ID: avtarsajal@fam</div>
+            </div>
+
+            <label class="file-upload-label" id="fileLabel">
+                🖼️ Payment Proof (Screenshot):<br>
+                <span id="fileName" style="color: #fff; font-size: 11px;">Choose file No file chosen</span>
+                <input type="file" id="proofFile" accept="image/*" onchange="handleFileSelect()">
+            </label>
+
+            <button onclick="verifyPayment()" style="margin-top: 6px;">Verify & Get Code</button>
+            <button class="get-code-btn" onclick="backToHome()">Back to Home</button>
+        </div>
+
+        <!-- Step 3: User Details -->
+        <div id="step3" class="screen hidden">
+            <div class="bts-logo">BTS</div>
+            <h2>User Details 💜</h2>
+            <p class="subtitle">Enter your details to start chatting</p>
+            
+            <input type="text" id="userName" placeholder="Enter Your Name">
+            
+            <select id="userGender">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Female">Female (ARMY)</option>
+                <option value="Male">Male (ARMY)</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <button onclick="saveDetails()" style="margin-top: 15px;">Continue to Member Selection</button>
+        </div>
+
+        <!-- Step 4: Member Selection -->
+        <div id="step4" class="screen hidden" style="justify-content: flex-start; padding: 16px 20px;">
+            <div class="bts-logo">BTS</div>
+            <h2>Choose Member 💜</h2>
+            <p class="subtitle" style="margin-bottom: 4px;">Select whom you want to chat with</p>
+            
+            <div class="member-grid">
+                <div class="member-card" onclick="selectMember('Jungkook', this)">
+                    <img src="Jk.jpg" alt="Jungkook">
+                    <span>Jungkook</span>
+                </div>
+                <div class="member-card" onclick="selectMember('V (Taehyung)', this)">
+                    <img src="V.jpg" alt="V">
+                    <span>V</span>
+                </div>
+                <div class="member-card" onclick="selectMember('Jimin', this)">
+                    <img src="Jimmi.jpg" alt="Jimin">
+                    <span>Jimin</span>
+                </div>
+                <div class="member-card" onclick="selectMember('Suga', this)">
+                    <img src="Suga.jpg" alt="Suga">
+                    <span>Suga</span>
+                </div>
+                <div class="member-card" onclick="selectMember('Jin', this)">
+                    <img src="Jin.jpg" alt="Jin">
+                    <span>Jin</span>
+                </div>
+                <div class="member-card" onclick="selectMember('RM', this)">
+                    <img src="Rm.jpg" alt="RM">
+                    <span>RM</span>
+                </div>
+                <div class="member-card" onclick="selectMember('J-Hope', this)">
+                    <img src="Jhope.jpg" alt="J-Hope">
+                    <span>J-Hope</span>
+                </div>
+                <div class="member-card" onclick="selectMember('BTS Group', this)">
+                    <img src="V.jpg" alt="Group">
+                    <span>All BTS</span>
+                </div>
+            </div>
+
+            <button onclick="startChat()" style="margin-top: 4px;">Start Chatting 💜</button>
+        </div>
+
+        <!-- Step 5: Chat Interface -->
+        <div id="step5" class="screen hidden" style="padding: 0; justify-content: flex-start; height: 500px;">
+            <div class="chat-header">
+                <div class="chat-user-info">
+                    <img id="chatMemberImg" src="" alt="Profile">
+                    <div class="info">
+                        <h4 id="chatMemberName">Member</h4>
+                        <span>● Online</span>
+                    </div>
+                </div>
+                <button class="call-btn" onclick="triggerCall()">📞 Call</button>
+            </div>
+            
+            <div class="chat-body" id="chatBody"></div>
+
+            <div class="question-tray">
+                <div class="q-chip" onclick="askQuestion('Aap India kab aa rahe ho? 🇮🇳')">🇮🇳 India kab aaoge?</div>
+                <div class="q-chip" onclick="askQuestion('Aapka favourite song kaun sa hai? 🎶')">🎶 Favourite song?</div>
+                <div class="q-chip" onclick="askQuestion('Kya aap mujhse shaadi karoge? 💍')">💍 Shaadi karoge?</div>
+                <div class="q-chip" onclick="askQuestion('Mujhse dosti karoge? 🤝')">🤝 Dosti karoge?</div>
+                <div class="q-chip" onclick="askQuestion('Aap khana me kya pasand karte ho? 🍔')">🍔 Favourite food?</div>
+                <div class="q-chip" onclick="askQuestion('Ek cute sa message do ARMY ke liye! 💜')">💜 Special message</div>
+            </div>
+
+            <div class="chat-footer">
+                <span>Tap a question above to chat! 👇</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="customModal" class="modal hidden">
+        <div class="modal-content">
+            <div id="modalIcon" style="font-size: 30px; margin-bottom: 8px;">⚠️</div>
+            <h3 id="modalTitle" style="color: #ff80bf; margin-bottom: 6px;">Notice</h3>
+            <p id="modalMsg" style="font-size: 13px; color: #ddd; margin-bottom: 15px; line-height: 1.4;"></p>
+            <div id="modalExtra"></div>
+            <button id="modalOkBtn" onclick="closeModal()" style="margin-top: 5px;">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedMemberName = "";
+        let selectedMemberImgSrc = "";
+        let userNameVal = "";
+
+        let qrElement = document.getElementById('qrImg');
+        qrElement.src = 'qr.png';
+        qrElement.onerror = function() {
+            this.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=avtarsajal@fam';
+        };
+
+        function showPopup(title = "Notice", msg = "", icon = "⚠️", isCodeBox = false, codeText = "") {
+            let modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMsg').innerText = msg;
+            document.getElementById('modalIcon').innerText = icon;
+            
+            let extraDiv = document.getElementById('modalExtra');
+            let okBtn = document.getElementById('modalOkBtn');
+
+            if(isCodeBox) {
+                extraDiv.innerHTML = `<div class="code-display-box">${codeText}</div>`;
+                okBtn.innerText = "Use Code Now";
+                okBtn.onclick = function() {
+                    document.getElementById('redeemCode').value = codeText;
+                    closeModal();
+                    backToHome();
+                };
+            } else {
+                extraDiv.innerHTML = "";
+                okBtn.innerText = "OK";
+                okBtn.onclick = closeModal;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function goToGetCode() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+
+        function backToHome() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        function handleFileSelect() {
+            let fileInput = document.getElementById('proofFile');
+            let fileNameSpan = document.getElementById('fileName');
+            let label = document.getElementById('fileLabel');
+            if(fileInput.files.length > 0) {
+                fileNameSpan.innerText = fileInput.files[0].name;
+                label.style.borderColor = "#4CAF50";
+            }
+        }
+
+        function verifyPayment() {
+            let fileInput = document.getElementById('proofFile');
+            if(fileInput.files.length === 0) {
+                showPopup("Missing Screenshot", "Phele payment ka screenshot upload karein tabhi code milega! 🖼️", "📸");
+                return;
+            }
+
+            showPopup("Scanning Payment...", "Screenshot check ho raha hai, kripya thoda intezaar karein...", "🔍");
+            document.getElementById('modalOkBtn').style.display = "none";
+
+            setTimeout(() => {
+                document.getElementById('modalOkBtn').style.display = "block";
+                showPopup("Payment Verified! 🎉", "Badhai ho! Aapka payment verify ho gaya hai. Yeh raha aapka secret code:", "✅", true, "ARMY7");
+            }, 2000);
+        }
+
+        function checkCode() {
+            let code = document.getElementById('redeemCode').value.trim();
+            if(code === "") {
+                showPopup("Enter Code", "Kripya pehle apna redeem code darj karein!", "⌨️");
+                return;
+            }
+            if(code.toLowerCase() === "army7") {
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step3').classList.remove('hidden');
+            } else {
+                showPopup("Invalid Code", "Galat code hai bhai! 'Get Code' par click karke naya code prapt karein.", "❌");
+            }
+        }
+
+        function saveDetails() {
+            userNameVal = document.getElementById('userName').value.trim();
+            let gender = document.getElementById('userGender').value;
+
+            if(userNameVal === "") {
+                showPopup("Name Required", "Kripya chat shuru karne ke liye apna naam likhein!", "👤");
+                return;
+            }
+            if(gender === "") {
+                showPopup("Gender Required", "Kripya apna gender select karein!", "💜");
+                return;
+            }
+
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.remove('hidden');
+        }
+
+        function selectMember(memberName, cardElement) {
+            selectedMemberName = memberName;
+            let imgTag = cardElement.querySelector('img');
+            selectedMemberImgSrc = imgTag ? imgTag.src : "";
+
+            let cards = document.querySelectorAll('.member-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+        }
+
+        function startChat() {
+            if(selectedMemberName === "") {
+                showPopup("Select Member", "Kripya chat karne ke liye kisi ek BTS member ko chunein! 💜", "👉");
+                return;
+            }
+
+            document.getElementById('chatMemberName').innerText = selectedMemberName;
+            document.getElementById('chatMemberImg').src = selectedMemberImgSrc || 'https://via.placeholder.com/40/ba68c8/fff?text=BTS';
+
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.remove('hidden');
+
+            triggerAutoChat();
+        }
+
+        function triggerAutoChat() {
+            let chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML = "";
+
+            setTimeout(() => {
+                appendMessage(`Annyeong, ${userNameVal}! 💜 how are you. i know you miss me my army gurl i also miss you my ${userNameVal}! ✨`, 'received');
+            }, 600);
+        }
+
+        function triggerCall() {
+            appendMessage("📞 Call karne ki koshish ki...", 'sent');
+
+            let chatBody = document.getElementById('chatBody');
+            let typingDiv = document.createElement('div');
+            typingDiv.className = 'message received';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerText = 'Typing... ✍️';
+            chatBody.appendChild(typingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                let typingElem = document.getElementById('typingIndicator');
+                if(typingElem) typingElem.remove();
+
+                appendMessage("Call mat karo mummy paas hai! 🤫📱", 'received');
+            }, 1500);
+        }
+
+        function appendMessage(text, sender) {
+            let chatBody = document.getElementById('chatBody');
+            let msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}`;
+            msgDiv.innerText = text;
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function askQuestion(questionText) {
+            appendMessage(questionText, 'sent');
+
+            let chatBody = document.getElementById('chatBody');
+            let typingDiv = document.createElement('div');
+            typingDiv.className = 'message received';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerText = 'Typing... ✍️';
+            chatBody.appendChild(typingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                let typingElem = document.getElementById('typingIndicator');
+                if(typingElem) typingElem.remove();
+
+                let reply = "";
+
+                if(questionText.includes('India')) {
+                    reply = `Arre wah ${userNameVal}! India ke ARMYs ka pyaar hume hamesha yaad rehta hai. Bahut jald tour plan kar rahe hain, wahan zaroor milenge! 🇮🇳💜`;
+                }
+                else if(questionText.includes('song')) {
+                    reply = `Mera favourite track 'Butter' aur 'Dynamite' hai, par studio mein naye ganon par kaam karte waqt 'Spring Day' mere dil ke sabse kareeb rehti hai. 🎶✨`;
+                }
+                else if(questionText.includes('shaadi')) {
+                    reply = `Haha ${userNameVal}! Tum sach mein bohot cute ho! Par abhi poora focus music aur ARMY par hai. Hamesha mere special friend rahoge! 😉💍`;
+                }
+                else if(questionText.includes('dosti')) {
+                    reply = `Pakki dosti! ${userNameVal}, tum aaj se mere official bestie ho. Hamesha khush raho aur smile karte raho! 🤝💜`;
+                }
+                else if(questionText.includes('khana') || questionText.includes('food')) {
+                    reply = `Mujhe Samgyeopsal (Pork belly) aur Ramen sabse zyada pasand hai! Tumne aaj kya khaya ${userNameVal}? 🍔🍜`;
+                }
+                else if(questionText.includes('message')) {
+                    reply = `Aap jahan bhi raho, apna dhyan rakho ${userNameVal}. Borahaey! Hum hamesha ek doosre ke sath hain! 💜✨`;
+                }
+
+                appendMessage(reply, 'received');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
